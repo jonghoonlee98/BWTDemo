@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Burrows-Wheeler Transform Visualization</title>
+    <script src="js/bwt.js"></script>
+  </head>
+  <body>
+  	<p>The Burrows-Wheeler Transform (BWT) rearranges a character string into groups of similar character subarrays. The BWT does not actually compress the string but this visualization will also show the compression as well.</p>
+    <p>
+    	Text to compress: 
+    	<input type="text" id="originalValue" size="80"></input>
+    	<button onclick="bwt()">Compress</button>
+    </p>
+    <br />
+
+    <p id="step1" style="display:none">First, generate all cyclic rotations of the text as shown below.<br /> 
+    We first append a $ symbol at the end which is useful for the inverse BWT.</p>
+    <div id="rotations" style="display:none"></div>
+    <br />
+
+    <p id="step2" style="display:none">Next, we sort the strings in lexicographic order where the $ symbol always comes first</p>
+    <div id="sortedRotations" style="display:none"></div>
+    <br />
+
+    <p id="step3" style="display:none">The last column of each string becomes the new string and we have the output of the BWT below</p>
+    <div id="bwtOutput" style="display:none"></div>
+    <br />
+  </body>
+</html>
