@@ -16,11 +16,11 @@
 
     <p id="step1" style="display:none">First, generate all cyclic rotations of the text as shown below.<br /> 
     We first append a $ symbol at the end which is useful for the inverse BWT.</p>
-    <div id="rotations" style="display:none"></div>
+    <div id="rotations" style="display:none; max-height:300px; overflow:scroll; border-style: solid; border-width: 0.5px"></div>
     <br />
 
     <p id="step2" style="display:none">Next, we sort the strings in lexicographic order where the $ symbol always comes first</p>
-    <div id="sortedRotations" style="display:none"></div>
+    <div id="sortedRotations" style="display:none; max-height:300px; overflow:scroll; border-style: solid; border-width: 0.5px"></div>
     <br />
 
     <p id="step3" style="display:none">The last column of each string becomes the new string and we have the output of the BWT below</p>
