@@ -4,27 +4,68 @@
     <meta charset="utf-8">
     <title>Burrows-Wheeler Transform Visualization</title>
     <script src="js/bwt.js"></script>
+    <script src="js/ibwt.js"></script>
   </head>
   <body>
-  	<p>The Burrows-Wheeler Transform (BWT) rearranges a character string into groups of similar character subarrays. The BWT does not actually compress the string but this visualization will also show the compression as well.</p>
+  	<p>The Burrows-Wheeler Transform (BWT) rearranges a character string into groups of similar character subarrays. It is used by bzip2, as one of first steps in compression tool</p>
     <p>
-    	Text to compress: 
+    	Text to rearrange: 
     	<input type="text" id="originalValue" size="80" value="banana"></input>
-    	<button onclick="bwt()">Compress</button>
+    	<button onclick="bwt()">Rearrange</button>
     </p>
-    <br />
+    <div id="error" style="display:none; color:red">For the purpose of this demo, please do not use $ in the string.</div>
 
-    <p id="step1" style="display:none">First, generate all cyclic rotations of the text as shown below.<br /> 
-    We first append a $ symbol at the end which is useful for the inverse BWT.</p>
-    <div id="rotations" style="display:none; max-height:300px; overflow:scroll; border-style: solid; border-width: 0.5px"></div>
-    <br />
+    <div id="forward" style="display:none;">
+      <p id="step1">
+      We first append a <b>$</b> symbol at the end which is useful for the inverse BWT. The symbol is arbitrary and can be any character not in the string itself.<br /> 
+      1) Generate all cyclic rotations of the text as shown below.</p>
+      <div id="rotations" style="max-height:400px; overflow:scroll; border-style: solid; border-width: 0.5px; font-family: Courier New"></div>
+      <br />
 
-    <p id="step2" style="display:none">Next, we sort the strings in lexicographic order where the $ symbol always comes first</p>
-    <div id="sortedRotations" style="display:none; max-height:300px; overflow:scroll; border-style: solid; border-width: 0.5px"></div>
-    <br />
+      <p id="step2">2) Next, we sort the strings in lexicographic order where the <b>$</b> symbol always comes first lexicographically. In this step, we also want to record the index of the original string, <i><span id="step2substr"></span></i>, which is at index <span id="orig_index"></span> to be used during the inversion</p>
+      <div id="sortedRotations" style="max-height:400px; overflow:scroll; border-style: solid; border-width: 0.5px; font-family: Courier New"></div>
+      <br />
 
-    <p id="step3" style="display:none">The last column of each string becomes the new string and we have the output of the BWT below</p>
-    <div id="bwtOutput" style="display:none"></div>
+      <p id="step3" style="">3) The last column of each string becomes the new string and we have the output of the BWT below. The longer the string, the more likely it is to see recurring substring patterns</p>
+      <div id="bwtOutput" style="font-size: x-large; font-family: Courier New;"></div>
+      <br />
+      While the Burrows-Wheeler Transform doesn't actually compress the string, the rearranged string is grouped into runs of similar characters which make compression tools like bzip more efficient when running several algorithms after BWT such as <a href='https://en.wikipedia.org/wiki/Move-to-front_transform' target='_blank'>Move-to-front transform</a>, <a href='https://en.wikipedia.org/wiki/Huffman_coding' target='_blank'>Huffman coding</a>, and <a href='https://en.wikipedia.org/wiki/Run-length_encoding' target='_blank'>Run-length encoding</a>. BWT is also useful in bioinformatics where a nucleic acid sequence (only consisting of 4 unique characters) can be rearranged into long runs of grouped characters.
+      <br />
+      <p>Let's now see how inverting the output of a BWT works</p>
+      <button onclick="ibwt()" id="ibwt">Invert</button>
+    </div>
     <br />
+    <div id="inverse" style="display:none;">
+      <p id="step4">
+        4) Part of what makes BWT efficient is inverting the rearranged string can be done with minimal data overhead. Given only the BWT output and the index from step 2, we must calculate the left shift at every index. If the <i>j</i>th string from step 1 is the <i>i</i>th string in step 2, then left_shift(<i>i</i>) is defined to be the (<i>j</i>+1)th string in step 2
+      </p>
+
+      <p>
+        To get the left_shift array, we first sort the characters of the BWT output in lexicographic order (again, where <b>$</b> always comes first) to obtain a sorted_BWT output shown below.
+      </p>
+      <div id="sortedbwt" style="font-size: large; font-family: Courier New;"></div>
+      <br />
+      <p id="step5">
+        5) left_shift[i] can now also be defined as how many times the BWT output has to be left rotated such that the first character in BWT output is equal to sorted_BWT[i]. For example, since <b>$</b> will always be the first character in sorted_BWT, we must rotate <i><span id="step5substr"></span></i> <span id="iorig_index"></span> times left such that <b>$</b> is the first character.
+      </p>
+
+      <p>
+        In the case that characters sorted_BWT[i] and sorted_BTW[j] are the same (which is very likely), left_shift[i] < left_shift[j]. With this information, we can fill out the array left_shift iteratively.
+      </p>
+      <br />
+      <p>
+        6) For each unique character, we get a list of sorted indices that is a subarray of left_shift like so:
+      </p>
+      <div id="lists"></div>
+      <br />
+      <p id="step7">
+        7) Merging these arrays gives us left_shift and once we have left_shift, the BWT output, and and index, we can reverse the BWT output to its original string by iterating the string length times. Starting with an empty final string, we say x = left_shift[x], where x is initially the index, and append BWT[x] to our final string. This gives us:
+      </p>
+      <div id="step7substr" style="font-size: large; font-family: Courier New;"></div>
+      <p id="step8">
+        and all we have to do is remove the trailing <b>$</b> to obtain our original string. The only two pieces of data needed to invert a BWT output are the location of the <b>$</b> symbol and the index of the original string in the sorted list from step 2.
+      </p>
+    </div>
+
   </body>
 </html>
