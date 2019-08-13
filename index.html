@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>Burrows-Wheeler Transform Visualization</title>
+    <script src="https://underscorejs.org/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.4/randomColor.min.js"></script>
     <script src="js/bwt.js"></script>
     <script src="js/ibwt.js"></script>
   </head>
@@ -26,10 +28,15 @@
       <div id="sortedRotations" style="max-height:400px; overflow:scroll; border-style: solid; border-width: 0.5px; font-family: Courier New"></div>
       <br />
 
-      <p id="step3" style="">3) The last column of each string becomes the new string and we have the output of the BWT below. The longer the string, the more likely it is to see recurring substring patterns</p>
+      <p id="step3" style="">3) The last column of each string becomes the new string and we have the output of the BWT below. The longer the string, the more likely it is to see recurring substring patterns (assuming every character in the string isn't unique)</p>
       <div id="bwtOutput" style="font-size: x-large; font-family: Courier New;"></div>
+      <div id="bwtOutputString" style="display:none"></div>
       <br />
       While the Burrows-Wheeler Transform doesn't actually compress the string, the rearranged string is grouped into runs of similar characters which make compression tools like bzip more efficient when running several algorithms after BWT such as <a href='https://en.wikipedia.org/wiki/Move-to-front_transform' target='_blank'>Move-to-front transform</a>, <a href='https://en.wikipedia.org/wiki/Huffman_coding' target='_blank'>Huffman coding</a>, and <a href='https://en.wikipedia.org/wiki/Run-length_encoding' target='_blank'>Run-length encoding</a>. BWT is also useful in bioinformatics where a nucleic acid sequence (only consisting of 4 unique characters) can be rearranged into long runs of grouped characters.
+      <br />
+      <br />
+      We can obtain the output of the Burrows-Wheeler Transform in <i>O(n)</i> time and <i>O(n)</i> space using a <a href='https://en.wikipedia.org/wiki/Suffix_array' target='_blank'>suffix array</a>.
+      <br />
       <br />
       <p>Let's now see how inverting the output of a BWT works</p>
       <button onclick="ibwt()" id="ibwt">Invert</button>
@@ -63,7 +70,7 @@
       </p>
       <div id="step7substr" style="font-size: large; font-family: Courier New;"></div>
       <p id="step8">
-        and all we have to do is remove the trailing <b>$</b> to obtain our original string. The only two pieces of data needed to invert a BWT output are the location of the <b>$</b> symbol and the index of the original string in the sorted list from step 2.
+        and all we have to do is remove the trailing <b>$</b> to obtain our original string. The only two pieces of data needed to invert a BWT output are the location of the <b>$</b> symbol and the index of the original string in the sorted list from step 2. The complexity of inverting the BWT is dominated by sorting the output, which gives <i>O(nlogn)</i> time and <i>O(n)</i> space
       </p>
     </div>
 

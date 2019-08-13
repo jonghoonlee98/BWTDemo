@@ -22,6 +22,33 @@ function bwt() {
 	sortedStrings = sortShifts(cyclicStrings, original);
 
 	BWTOutput = generateBWTOutput(sortedStrings);
+
+	var origChar = BWTOutput[0];
+	var curString = origChar;
+
+	for (var i = 1; i < BWTOutput.length; i++) {
+		if (origChar == BWTOutput[i]) {
+			curString += BWTOutput[i];
+			if (i == BWTOutput.length - 1) {
+				if (curString.length >= 2) {
+					document.getElementById("bwtOutput").innerHTML += "<span style=color:" + randomColor() + ";>" + curString + "</span>";
+				} else {
+					document.getElementById("bwtOutput").innerHTML += "<span>" + curString + "</span>";
+				}
+			}
+		} else {
+			if (curString.length >= 2) {
+				document.getElementById("bwtOutput").innerHTML += "<span style=color:" + randomColor() + ";>" + curString + "</span>";
+			} else {
+				document.getElementById("bwtOutput").innerHTML += "<span>" + curString + "</span>";
+			}
+			curString = BWTOutput[i];
+			origChar = BWTOutput[i];
+		}
+	}
+	
+	var mtfOutput = mtf(original.replace("$",""));
+	console.log(mtfOutput);
 }
 
 function clearContent() {
@@ -90,6 +117,25 @@ function generateBWTOutput(sortedStrings) {
 		BWTOutput += sortedStrings[i][len - 1];
 	}
 
-	document.getElementById("bwtOutput").textContent = BWTOutput;
+	document.getElementById("bwtOutputString").textContent = BWTOutput;
 	return BWTOutput;
+}
+
+function mtf(data) {
+  console.log(data)
+  var table = _.range(256);
+  var res = [];
+
+  for (var i = 0; i < data.length; i++) {
+    var code = data[i].charCodeAt();
+    var idx = table.indexOf(code);
+    res.push(idx);
+
+    if (idx !== 0) {
+      table.splice(idx, 1);
+      table.unshift(code);
+    }
+  }
+
+  return res;
 }

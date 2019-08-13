@@ -13,7 +13,7 @@ function ibwt() {
 	document.getElementById("ibwt").style.display= "none";
 	document.getElementById("inverse").style.display = "block";
 
-	var bwtOutput = document.getElementById("bwtOutput").textContent;
+	var bwtOutput = document.getElementById("bwtOutputString").textContent;
 	const bwt = bwtOutput;
 
 	if (bwtOutput.length < 40) {
@@ -37,7 +37,9 @@ function ibwt() {
 
 	sortedString = sortedString.join('');
 
-	document.getElementById("sortedbwt").innerHTML = sortedString;
+	var htmlSortedString = sortedString.split(' ').join('&nbsp;');
+
+	document.getElementById("sortedbwt").innerHTML = htmlSortedString;
 
 	var orig_index = document.getElementById("orig_index").innerHTML;
 	document.getElementById("iorig_index").innerHTML = orig_index;
@@ -49,7 +51,11 @@ function ibwt() {
 	document.getElementById("lists").innerHTML = prev + ": [" + orig_index;
 	for (var i = 1; i < sortedString.length; i++) {
 		if (sortedString[i] != prev) {
-			document.getElementById("lists").innerHTML += "]<br /><b>" + sortedString[i] + "</b>: [";
+			if (sortedString[i] == ' ') {
+				document.getElementById("lists").innerHTML += "]<br />&nbsp;: [";
+			} else {
+				document.getElementById("lists").innerHTML += "]<br /><b>" + sortedString[i] + "</b>: [";
+			}
 		} 
 		var j = str.indexOf(sortedString[i]);
 		document.getElementById("lists").innerHTML += " " + j + " "
