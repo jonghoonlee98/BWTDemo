@@ -15,6 +15,7 @@
     	<input type="text" id="originalValue" size="80" value="banana"></input>
     	<button onclick="bwt()">Rearrange</button>
     </p>
+    Example inputs: <button onclick="ex1()">Best efficiency</button> <button onclick="ex2()">Good efficiency</button> <button onclick="ex3()">Bad efficiency</button> <button onclick="ex4()">Random nucleic acid sequence</button> <button onclick="ex5()">The sentences directly above</button>
     <div id="error" style="display:none; color:red">For the purpose of this demo, please do not use $ in the string.</div>
 
     <div id="forward" style="display:none;">
@@ -28,7 +29,7 @@
       <div id="sortedRotations" style="max-height:400px; overflow:scroll; border-style: solid; border-width: 0.5px; font-family: Courier New"></div>
       <br />
 
-      <p id="step3" style="">3) The last column of each string becomes the new string and we have the output of the BWT below. The longer the string, the more likely it is to see recurring substring patterns (assuming every character in the string isn't unique)</p>
+      <p id="step3" style="">3) The last column of each string becomes the new string and we have the output of the BWT below. The longer the string where the frequency of the same substrings increase, the more likely it is to see recurring substring patterns (assuming every character in the string isn't unique). Here, we have <span id="expectedsavings"></span> The higher this fraction is, the better the compression.</p>
       <div id="bwtOutput" style="font-size: x-large; font-family: Courier New;"></div>
       <div id="bwtOutputString" style="display:none"></div>
       <br />

@@ -1,4 +1,22 @@
+function ex1() {
+	document.getElementById("originalValue").value = "banana banana banana banana banana";
+}
 
+function ex2() {
+	document.getElementById("originalValue").value = "every banana other banana word banana is banana banana";
+}
+
+function ex3() {
+	document.getElementById("originalValue").value = "no repeated substring patterns in this sentence";
+}
+
+function ex4() {
+	document.getElementById("originalValue").value = "ACTAGCATGCAGGACTGAGCATCGACGGATCGAGCGGATCTTTAGCGATCGATC";
+}
+
+function ex5() {
+	document.getElementById("originalValue").value = "The Burrows-Wheeler Transform (BWT) rearranges a character string into groups of similar character subarrays. It is used by bzip2, as one of first steps in compression tool";
+}
 
 function bwt() {
 	clearContent();
@@ -25,30 +43,38 @@ function bwt() {
 
 	var origChar = BWTOutput[0];
 	var curString = origChar;
+	var repeatedCharacters = 0;
+	var repeatedStrings = 0;
 
 	for (var i = 1; i < BWTOutput.length; i++) {
 		if (origChar == BWTOutput[i]) {
 			curString += BWTOutput[i];
 			if (i == BWTOutput.length - 1) {
 				if (curString.length >= 2) {
-					document.getElementById("bwtOutput").innerHTML += "<span style=color:" + randomColor() + ";>" + curString + "</span>";
+					document.getElementById("bwtOutput").innerHTML += "<span style=color:" + randomColor() + ";>" + curString.replace(" ", "&nbsp;") + "</span>";
+					repeatedStrings = repeatedStrings + 1;
+					repeatedCharacters = repeatedCharacters + curString.length;
 				} else {
 					document.getElementById("bwtOutput").innerHTML += "<span>" + curString + "</span>";
 				}
 			}
 		} else {
 			if (curString.length >= 2) {
-				document.getElementById("bwtOutput").innerHTML += "<span style=color:" + randomColor() + ";>" + curString + "</span>";
+				document.getElementById("bwtOutput").innerHTML += "<span style=color:" + randomColor() + ";>" + curString.replace(" ", "&nbsp;") + "</span>";
+				repeatedStrings = repeatedStrings + 1;
+				repeatedCharacters = repeatedCharacters + curString.length;
+				if (i == BWTOutput.length - 1) {
+				document.getElementById("bwtOutput").innerHTML += "<span>" + BWTOutput[i] + "</span>";
+				}
 			} else {
-				document.getElementById("bwtOutput").innerHTML += "<span>" + curString + "</span>";
+				document.getElementById("bwtOutput").innerHTML += "<span>" + curString.replace(" ", "&nbsp;") + "</span>";
 			}
 			curString = BWTOutput[i];
 			origChar = BWTOutput[i];
 		}
 	}
-	
-	var mtfOutput = mtf(original.replace("$",""));
-	console.log(mtfOutput);
+	document.getElementById("expectedsavings").innerHTML = repeatedStrings + " runs of identical characters which make up " + repeatedCharacters + " of the total " + (original.length - 1) + " characters.";
+
 }
 
 function clearContent() {
@@ -65,6 +91,7 @@ function clearContent() {
 	document.getElementById("iorig_index").innerHTML = "";
 	document.getElementById("lists").innerHTML = "";
 	document.getElementById("step7substr").innerHTML = "";
+	document.getElementById("expectedsavings").innerHTML = "";
 }
 
 function generateShifts(original) {
@@ -129,7 +156,7 @@ function mtf(data) {
   for (var i = 0; i < data.length; i++) {
     var code = data[i].charCodeAt();
     var idx = table.indexOf(code);
-    res.push(idx);
+	res.push(idx);
 
     if (idx !== 0) {
       table.splice(idx, 1);
